@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCV Venezuela | Tasas Oficiales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.7);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-cyan-light: #22d3ee;
+            --accent-blue: #3b82f6;
+            --accent-blue-light: #60a5fa;
+            --accent-violet: #8b5cf6;
+            --accent-emerald: #10b981;
+            --border: rgba(148, 163, 184, 0.1);
+            --glass: rgba(255, 255, 255, 0.02);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f9ff;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-cyan: #0891b2;
+            --accent-cyan-light: #06b6d4;
+            --accent-blue: #2563eb;
+            --accent-blue-light: #3b82f6;
+            --accent-violet: #7c3aed;
+            --accent-emerald: #059669;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Modern Background */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .mesh-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 60% at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 50% at 60% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+        }
+
+        .mesh-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%);
+            top: -10%;
+            left: -10%;
+        }
+
+        .glow-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.25), transparent 70%);
+            bottom: 10%;
+            right: -5%;
+            animation-delay: -7s;
+        }
+
+        .glow-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.02); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 0 2rem;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            box-shadow: 0 10px 40px -10px rgba(6, 182, 212, 0.5);
+            position: relative;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 17px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            z-index: -1;
+            opacity: 0.4;
+            filter: blur(15px);
+        }
+
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+
+        .icon-btn {
+            width: 46px;
+            height: 46px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientFlow 4s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Main Rate Card */
+        .main-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-violet));
+        }
+
+        .main-card::after {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-cyan), transparent 70%);
+            opacity: 0.06;
+        }
+
+        .rate-hero {
+            text-align: center;
+            padding: 1rem 0 2rem;
+        }
+
+        .rate-flag {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .rate-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .rate-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 5.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .rate-suffix {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .rate-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-item .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-item .value {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Currency Grid */
+        .currency-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+
+        .currency-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 1.75rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .currency-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .currency-card.usd { border-left: 3px solid var(--accent-cyan); }
+        .currency-card.eur { border-left: 3px solid var(--accent-blue); }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .currency-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .currency-flag {
+            font-size: 2.2rem;
+        }
+
+        .currency-name h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .currency-name span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .currency-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald);
+        }
+
+        .card-rate {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-suffix {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .card-footer {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .source-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.3s;
+        }
+
+        .copy-btn:hover {
+            color: var(--accent-cyan-light);
+        }
+
+        /* Chart Section */
+        .chart-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-title i {
+            color: var(--accent-cyan);
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .tab-btn {
+            padding: 0.4rem 0.9rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--bg-secondary);
+        }
+
+        .chart-box {
+            height: 320px;
+            position: relative;
+        }
+
+        /* Calculator */
+        .calc-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .calc-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .calc-title i {
+            color: var(--accent-cyan);
+        }
+
+        .calc-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .calc-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .calc-group input,
+        .calc-group select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .calc-group input:focus,
+        .calc-group select:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+        }
+
+        .calc-group select {
+            font-weight: 500;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+
+        .swap-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .swap-icon:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border-color: transparent;
+            transform: rotate(180deg);
+        }
+
+        .quick-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .quick-chip {
+            padding: 0.6rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .quick-chip:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .quick-chip .num {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .quick-chip .conv {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.4);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 20px 45px -10px rgba(6, 182, 212, 0.5);
+        }
+
+        .fab.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .currency-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .rate-value {
+                font-size: 3.5rem;
+            }
+
+            .rate-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .calc-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .swap-icon {
+                margin: 0 auto;
+            }
+
+            .fab {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh">
+        <div class="mesh-gradient"></div>
+        <div class="mesh-lines"></div>
+        <div class="glow-orb glow-1"></div>
+        <div class="glow-orb glow-2"></div>
+        <div class="glow-orb glow-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-bar">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>BCV Venezuela</h1>
+                        <span>Tasas Oficiales</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        <span id="status-text">En vivo</span>
+                    </div>
+                    <button class="icon-btn" id="theme-btn" title="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero slide-up">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Datos oficiales del Banco Central
+                </div>
+                <h1>Tasas de Cambio<br><span class="highlight">en Tiempo Real</span></h1>
+                <p>Consulta las tasas oficiales del dólar y euro actualizadas directamente desde el BCV.</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="main-card slide-up">
+                <div class="rate-hero">
+                    <span class="rate-flag">🇺🇸</span>
+                    <p class="rate-label">Dólar Estadounidense</p>
+                    <h2 class="rate-value" id="main-rate">---</h2>
+                    <span class="rate-suffix">Bs por USD</span>
+                    <div class="rate-info">
+                        <div class="info-item">
+                            <p class="label">Última actualización</p>
+                            <p class="value" id="last-update">Cargando...</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="label">Variación 7 días</p>
+                            <p class="value" id="variation" style="color: var(--accent-cyan);">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="currency-grid">
+                <div class="currency-card usd slide-up">
+                    <div class="card-top">
+                        <div class="currency-info">
+                            <span class="currency-flag">🇺🇸</span>
+                            <div class="currency-name">
+                                <h3>Dólar Oficial</h3>
+                                <span>USD / BS</span>
+                            </div>
+                        </div>
+                        <div class="currency-badge">
+                            <i class="fas fa-arrow-up"></i> Actual
+                        </div>
+                    </div>
+                    <p class="card-rate" id="usd-rate">---</p>
+                    <p class="card-suffix">Bolívares Soberanos</p>
+                    <div class="card-footer">
+                        <div class="source-tag">
+                            <i class="fas fa-university"></i>
+                            <span>BCV Venezuela</span>
+                        </div>
+                        <div class="copy-btn" onclick="copyRate('usd-rate')">
+                            <i class="fas fa-copy"></i> Copiar
+                        </div>
+                    </div>
+                </div>
+
+                <div class="currency-card eur slide-up">
+                    <div class="card-top">
+                        <div class="currency-info">
+                            <span class="currency-flag">🇪🇺</span>
+                            <div class="currency-name">
+                                <h3>Euro Oficial</h3>
+                                <span>EUR / BS</span>
+                            </div>
+                        </div>
+                        <div class="currency-badge">
+                            <i class="fas fa-arrow-up"></i> Actual
+                        </div>
+                    </div>
+                    <p class="card-rate" id="eur-rate">---</p>
+                    <p class="card-suffix">Bolívares Soberanos</p>
+                    <div class="card-footer">
+                        <div class="source-tag">
+                            <i class="fas fa-university"></i>
+                            <span>BCV Venezuela</span>
+                        </div>
+                        <div class="copy-btn" onclick="copyRate('eur-rate')">
+                            <i class="fas fa-copy"></i> Copiar
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card slide-up">
+                <div class="chart-header">
+                    <h2 class="chart-title">
+                        <i class="fas fa-chart-area"></i>
+                        Evolución Histórica
+                    </h2>
+                    <div class="chart-tabs">
+                        <button class="tab-btn active" data-days="7">7 Días</button>
+                        <button class="tab-btn" data-days="15">15 Días</button>
+                        <button class="tab-btn" data-days="30">30 Días</button>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <canvas id="rateChart"></canvas>
+                </div>
+            </div>
+
+            <div class="calc-card slide-up">
+                <h2 class="calc-title">
+                    <i class="fas fa-calculator"></i>
+                    Conversor de Monedas
+                </h2>
+                <div class="calc-row">
+                    <div class="calc-group">
+                        <label>Monto</label>
+                        <input type="number" id="calc-amount" value="100" min="0" step="0.01">
+                        <select id="calc-from">
+                            <option value="usd">🇺🇸 Dólar (USD)</option>
+                            <option value="eur">🇪🇺 Euro (EUR)</option>
+                            <option value="bs">🇻🇪 Bolívar (BS)</option>
+                        </select>
+                    </div>
+                    <button class="swap-icon" id="swap-btn" title="Intercambiar">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <div class="calc-group">
+                        <label>Resultado</label>
+                        <input type="text" id="calc-result" readonly value="0.00">
+                        <select id="calc-to">
+                            <option value="bs">🇻🇪 Bolívar (BS)</option>
+                            <option value="usd">🇺🇸 Dólar (USD)</option>
+                            <option value="eur">🇪🇺 Euro (EUR)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="quick-grid">
+                    <div class="quick-chip" data-usd="1">
+                        <p class="num">$1</p>
+                        <p class="conv" id="qc-1">-- Bs</p>
+                    </div>
+                    <div class="quick-chip" data-usd="5">
+                        <p class="num">$5</p>
+                        <p class="conv" id="qc-5">-- Bs</p>
+                    </div>
+                    <div class="quick-chip" data-usd="10">
+                        <p class="num">$10</p>
+                        <p class="conv" id="qc-10">-- Bs</p>
+                    </div>
+                    <div class="quick-chip" data-usd="20">
+                        <p class="num">$20</p>
+                        <p class="conv" id="qc-20">-- Bs</p>
+                    </div>
+                    <div class="quick-chip" data-usd="50">
+                        <p class="num">$50</p>
+                        <p class="conv" id="qc-50">-- Bs</p>
+                    </div>
+                    <div class="quick-chip" data-usd="100">
+                        <p class="num">$100</p>
+                        <p class="conv" id="qc-100">-- Bs</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Tasas oficiales del Banco Central de Venezuela</p>
+        </footer>
+    </div>
+
+    <button class="fab" id="refresh-btn" title="Actualizar datos">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script>
+        const API_URL = 'https://ve.dolarapi.com/v1/cotizaciones';
+        const HISTORIC_URL = 'https://ve.dolarapi.com/v1/cotizaciones/historico';
+
+        let rates = { usd: 0, eur: 0 };
+        let lastUpdate = null;
+        let rateChart = null;
+        let historicData = { usd: [], eur: [], labels: [] };
+
+        const $ = id => document.getElementById(id);
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            $('theme-btn').innerHTML = `<i class="fas fa-${saved === 'light' ? 'sun' : 'moon'}"></i>`;
+        }
+
+        $('theme-btn').addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            $('theme-btn').innerHTML = `<i class="fas fa-${next === 'light' ? 'sun' : 'moon'}"></i>`;
+            if (rateChart) createChart();
+        });
+
+        function formatNumber(num, decimals = 2) {
+            return new Intl.NumberFormat('es-VE', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            }).format(num);
+        }
+
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-VE', {
+                day: '2-digit',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        async function fetchRates() {
+            const btn = $('refresh-btn');
+            btn.classList.add('loading');
+            btn.innerHTML = '<i class="fas fa-spinner"></i>';
+            $('status-text').textContent = 'Actualizando...';
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Error');
+                const data = await response.json();
+
+                data.forEach(c => {
+                    if (c.moneda === 'USD') rates.usd = c.promedio;
+                    else if (c.moneda === 'EUR') rates.eur = c.promedio;
+                });
+
+                lastUpdate = new Date();
+                updateUI();
+                $('status-text').textContent = 'En vivo';
+            } catch (error) {
+                console.error(error);
+                $('status-text').textContent = 'Sin conexión';
+            } finally {
+                btn.classList.remove('loading');
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+            }
+        }
+
+        async function fetchHistoricRates(days = 7) {
+            try {
+                const response = await fetch(HISTORIC_URL);
+                if (!response.ok) throw new Error('Error');
+                const data = await response.json();
+
+                historicData = { usd: [], eur: [], labels: [] };
+                const filtered = data.slice(-days);
+
+                filtered.forEach(item => {
+                    if (item.moneda === 'USD') {
+                        historicData.usd.push(item.promedio);
+                        historicData.labels.push(formatDateShort(item.fecha));
+                    }
+                });
+
+                data.slice(-days).forEach(item => {
+                    if (item.moneda === 'EUR') historicData.eur.push(item.promedio);
+                });
+
+                while (historicData.eur.length < historicData.usd.length) {
+                    historicData.eur.unshift(historicData.eur[0] || 0);
+                }
+
+                createChart();
+
+                if (historicData.usd.length >= 2) {
+                    const change = ((historicData.usd[historicData.usd.length - 1] - historicData.usd[0]) / historicData.usd[0] * 100).toFixed(2);
+                    $('variation').textContent = `${change > 0 ? '+' : ''}${change}%`;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function formatDateShort(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-VE', { day: '2-digit', month: 'short' });
+        }
+
+        function createChart() {
+            const ctx = document.getElementById('rateChart').getContext('2d');
+            if (rateChart) rateChart.destroy();
+
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+            const textColor = isLight ? '#64748b' : '#94a3b8';
+
+            rateChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: historicData.labels,
+                    datasets: [
+                        {
+                            label: 'Dólar (USD)',
+                            data: historicData.usd,
+                            borderColor: '#06b6d4',
+                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#06b6d4'
+                        },
+                        {
+                            label: 'Euro (EUR)',
+                            data: historicData.eur,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#3b82f6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { color: textColor, usePointStyle: true, padding: 20 }
+                        },
+                        tooltip: {
+                            backgroundColor: isLight ? '#0f172a' : '#fff',
+                            titleColor: isLight ? '#fff' : '#0f172a',
+                            bodyColor: isLight ? '#fff' : '#0f172a',
+                            borderColor: isLight ? '#1e293b' : '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 14,
+                            cornerRadius: 12,
+                            callbacks: { label: ctx => `${ctx.dataset.label}: Bs ${formatNumber(ctx.parsed.y)}` }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 11 }, callback: v => `Bs ${formatNumber(v, 0)}` }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                fetchHistoricRates(parseInt(btn.dataset.days));
+            });
+        });
+
+        function updateUI() {
+            $('main-rate').textContent = formatNumber(rates.usd);
+            $('usd-rate').textContent = formatNumber(rates.usd);
+            $('eur-rate').textContent = formatNumber(rates.eur);
+            $('last-update').textContent = lastUpdate ? formatDateTime(lastUpdate.toISOString()) : '--';
+            updateCalculator();
+            updateQuickConvert();
+        }
+
+        function updateCalculator() {
+            const amount = parseFloat($('calc-amount').value) || 0;
+            const from = $('calc-from').value;
+            const to = $('calc-to').value;
+            let result = amount;
+
+            if (from === 'usd' && to === 'bs') result = amount * rates.usd;
+            else if (from === 'eur' && to === 'bs') result = amount * rates.eur;
+            else if (from === 'bs' && to === 'usd') result = amount / rates.usd;
+            else if (from === 'bs' && to === 'eur') result = amount / rates.eur;
+            else if (from === 'usd' && to === 'eur') result = (amount * rates.usd) / rates.eur;
+            else if (from === 'eur' && to === 'usd') result = (amount * rates.eur) / rates.usd;
+
+            $('calc-result').value = formatNumber(result, 4);
+        }
+
+        function updateQuickConvert() {
+            [1, 5, 10, 20, 50, 100].forEach(usd => {
+                const el = $(`qc-${usd}`);
+                if (el) el.textContent = `${formatNumber(usd * rates.usd)} Bs`;
+            });
+        }
+
+        $('calc-amount').addEventListener('input', updateCalculator);
+        $('calc-from').addEventListener('change', updateCalculator);
+        $('calc-to').addEventListener('change', updateCalculator);
+
+        $('swap-btn').addEventListener('click', () => {
+            const fromVal = $('calc-from').value;
+            const toVal = $('calc-to').value;
+            if (fromVal === 'bs' && toVal === 'bs') return;
+
+            if (fromVal === 'bs') { $('calc-from').value = toVal; $('calc-to').value = 'bs'; }
+            else if (toVal === 'bs') { $('calc-to').value = fromVal; $('calc-from').value = 'bs'; }
+            else { $('calc-from').value = toVal; $('calc-to').value = fromVal; }
+            updateCalculator();
+        });
+
+        $('refresh-btn').addEventListener('click', fetchRates);
+
+        document.querySelectorAll('.quick-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                $('calc-from').value = 'usd';
+                $('calc-to').value = 'bs';
+                $('calc-amount').value = chip.dataset.usd;
+                updateCalculator();
+            });
+        });
+
+        function copyRate(id) {
+            const rate = $(id).textContent;
+            navigator.clipboard.writeText(rate);
+        }
+
+        initTheme();
+        fetchRates();
+        fetchHistoricRates(7);
+        setInterval(fetchRates, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
